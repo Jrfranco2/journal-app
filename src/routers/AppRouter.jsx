@@ -7,6 +7,7 @@ import { auth } from "../firebase/firebase-config";
 import { useDispatch } from "react-redux";
 import { login } from "../actions/auth";
 import RingLoader from "react-spinners/RingLoader";
+import { startLoadingNotes } from "../actions/notes";
 
 const AppRouter = () => {
   const dispatch = useDispatch();
@@ -15,10 +16,11 @@ const AppRouter = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user?.uid) {
         dispatch(login(user.uid, user.displayName));
-        setIsLoggedIn(true);
+        setIsLoggedIn(true);        
+        dispatch(startLoadingNotes(user.uid))
       } else {
         setIsLoggedIn(false);
       }
