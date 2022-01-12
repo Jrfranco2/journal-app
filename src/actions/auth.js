@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import { types } from "../types/types";
 import { finishLoading, startLoading } from "./ui";
+import { noteLogeout } from "./notes";
 
 export const startLoginEmailPassword = (email, password) => {
   return (dispatch) => {
@@ -59,6 +60,7 @@ export const startLogout = () => {
   return async (dispatch) => {
     await signOut(auth);
     dispatch(logout());
+    dispatch(noteLogeout());
   };
 };
 

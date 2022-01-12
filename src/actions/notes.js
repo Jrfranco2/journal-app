@@ -23,11 +23,20 @@ export const startNewNote = () => {
     };
     const doc = await addDoc(collection(db, `${uid}/journal/notes`), newNote);
     dispatch(activeNote(doc.id, newNote));
+    dispatch(addNewNote(doc.id, newNote));
   };
 };
 
 export const activeNote = (id, note) => ({
   type: types.notesActive,
+  payload: {
+    id,
+    ...note,
+  },
+});
+
+export const addNewNote = (id, note) => ({
+  type: types.notesAddNote,
   payload: {
     id,
     ...note,
@@ -108,4 +117,8 @@ export const startDeleting = (id) => {
 export const deleteNote = (id) => ({
   type: types.notesDelete,
   payload: id,
+});
+
+export const noteLogeout = () => ({
+  type: types.notesLogoutCleaning,
 });
