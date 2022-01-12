@@ -1,8 +1,17 @@
-import { addDoc, collection } from "firebase/firestore";
+import Swal from "sweetalert2";
+import {
+  addDoc,
+  collection,
+  updateDoc,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
+
 import { db } from "../firebase/firebase-config";
 import { loadNotes } from "../helpers/loadNotes";
 
 import { types } from "../types/types";
+import { fileUpload } from "../helpers/fileUpload";
 
 export const startNewNote = () => {
   return async (dispatch, getState) => {
@@ -35,4 +44,68 @@ export const startLoadingNotes = (uid) => {
 export const setNotes = (notes) => ({
   type: types.notesLoad,
   payload: notes,
+});
+
+export const startSaveNote = (note) => {
+  return async (dispatch, getState) => {
+    const uid = getState().auth.uid;
+
+    if (!note.url) {
+      delete note.url;
+    }
+
+    const noteToFirestore = { ...note };
+    delete noteToFirestore.id;
+
+    await updateDoc(
+      doc(db, `${uid}/journal/notes/${note.id}`),
+      noteToFirestore
+    );
+
+    dispatch(refreshNote(note.id, noteToFirestore));
+    Swal.fire("Saved", note.title, "success");
+  };
+};
+
+export const refreshNote = (id, note) => ({
+  type: types.notesUpdated,
+  payload: {
+    id,
+    note: {
+      id,
+      ...note,
+    },
+  },
+});
+
+export const startUploading = (file) => {
+  return async (dispatch, getState) => {
+    const { active: activeNote } = getState().notes;
+    Swal.fire({
+      title: "Uploading...",
+      text: "Please wait....",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+    const fileurl = await fileUpload(file);
+    activeNote.url = fileurl;
+    dispatch(startSaveNote(activeNote));
+    Swal.close();
+  };
+};
+
+export const startDeleting = (id) => {
+  return async (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    const noteRef = doc(db, `${uid}/journal/notes/${id}`);
+    await deleteDoc(noteRef);
+    dispatch(deleteNote(id));
+  };
+};
+
+export const deleteNote = (id) => ({
+  type: types.notesDelete,
+  payload: id,
 });
