@@ -2,6 +2,8 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import AppRouter from "./routers/AppRouter";
 
+import "animate.css";
+
 const JournalApp = () => {
   return (
     <Provider store={store}>

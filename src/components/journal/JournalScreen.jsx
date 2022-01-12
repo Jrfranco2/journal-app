@@ -4,15 +4,12 @@ import NothingSelected from "./NothingSelected";
 import Sidebar from "./Sidebar";
 
 const JournalScreen = () => {
-
-  const {active} = useSelector(state => state.notes)
+  const { active } = useSelector((state) => state.notes);
 
   return (
-    <div className="journal__main-content">
+    <div className="journal__main-content animate__animated animate__fadeInLeft">
       <Sidebar />
-      <main>
-        {active ? <NoteScreen /> : <NothingSelected /> }        
-      </main>
+      <main>{active ? <NoteScreen /> : <NothingSelected />}</main>
     </div>
   );
 };
