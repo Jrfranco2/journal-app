@@ -1,27 +1,27 @@
-const JournalEntry = () => {
+import moment from "moment";
+
+const JournalEntry = ({ id, body, date, title, url }) => {
+  const noteDate = moment(date);
+
+  console.log(noteDate);
   return (
     <div className="journal__entry pointer">
-      <div
-        className="journal__entry-picture"
-        style={{
-          backgroundSize: "cover",
-          backgroundImage:
-            "url(https://firebasestorage.googleapis.com/v0/b/wallet-roman.appspot.com/o/Landscape-Color.jpg?alt=media&token=453f432b-a910-467f-a35c-f06dd8bdb965)",
-        }}
-      ></div>
+      {url && (
+        <div
+          className="journal__entry-picture"
+          style={{
+            backgroundSize: "cover",
+            backgroundImage: `url(${url})`,
+          }}
+        ></div>
+      )}
       <div className="journal__entry-body">
-        <p className="journal__entry-title">Un nuevo dia</p>
-        <p className="journal__entry-content">
-          Sint aute culpa nisi eiusmod non. Culpa deserunt mollit est culpa
-          nostrud non. Voluptate incididunt aute elit elit elit velit dolor
-          occaecat nostrud irure. Anim quis deserunt fugiat eu cupidatat.
-          Cupidatat est id consectetur nulla aliqua commodo nulla eiusmod
-          officia irure et Lorem. Et pariatur et sunt cillum eu aliquip qui.
-        </p>
+        <p className="journal__entry-title">{title}</p>
+        <p className="journal__entry-content">{body}</p>
       </div>
       <div className="journal__entry-date-box">
-        <span>Monday</span>
-        <h4>28</h4>
+        <span>{noteDate.format("dddd")}</span>
+        <h4>{noteDate.format("Do")}</h4>
       </div>
     </div>
   );
